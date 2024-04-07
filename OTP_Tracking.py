@@ -2,6 +2,7 @@ import logging
 import pyautogui
 import psutil
 import subprocess
+import sys
 
 def normalize_path(path):
     """
@@ -31,15 +32,11 @@ def check_txt_file(file_path, target_line):
     """
     특정 txt 파일에서 특정 라인을 확인하는 함수
     """
-    try:
-        with open(file_path, 'r') as file:
-            for line_number, line in enumerate(file, start=1):
-                if line_number == target_line and "<LotID>" in line and ".00</LotID>" in line:
-                    return line
-        return None
-    except FileNotFoundError:
-        print("파일을 찾을 수 없습니다.")
-        return None
+    with open(file_path, 'r') as file:
+        for line_number, line in enumerate(file, start=1):
+            if line_number == target_line and "<LotID>" in line and ".00</LotID>" in line:
+                return line
+    return None
 
 def run_program(program_path):
     """
@@ -48,26 +45,6 @@ def run_program(program_path):
     subprocess.Popen(program_path, shell=True)
     print("프로그램을 실행했습니다.")
     logging.info(f"프로그램을 실행했습니다: {program_path}")
-
-def is_program_running(program_name):
-    """
-    특정 프로그램이 실행 중인지 확인하는 함수
-    """
-    for proc in psutil.process_iter(['name']):
-        
-        if program_name.lower() in proc.info['name'].lower():
-            return True
-    return False
-
-def is_program_running(program_name):
-    """
-    특정 프로그램이 실행 중인지 확인하는 함수
-    """
-    for proc in psutil.process_iter(['name']):
-        if program_name.lower() in proc.info['name'].lower():
-            return True
-    return False
-
 
 if __name__ == "__main__":
     logging.basicConfig(filename='log_all.txt', level=logging.INFO, format='%(asctime)s - %(levelname)s: %(message)s')
@@ -84,7 +61,7 @@ if __name__ == "__main__":
         if detect_popup(popup_image_path):
             print("팝업이 감지되었습니다.")
             logging.info("팝업이 감지되었습니다.")
-            
+
             if not is_program_running(program_to_check):
                 # 특정 라인에서 필요한 조건을 만족하는지 확인
                 line = check_txt_file(txt_file_path, target_line)
@@ -92,19 +69,18 @@ if __name__ == "__main__":
                     print(f"파일에서 조건을 만족하는 라인을 찾았습니다: {line}")
                     logging.info(f"파일에서 조건을 만족하는 라인을 찾았습니다: {line}")
                     # 팝업이 감지된 후에 이미 실행된 프로그램이 없다면 실행
-                    run_program(program_to_run)                   
-
-                    
+                    run_program(program_to_run)
                 else:
                     print(f"파일에서 조건을 만족하는 라인을 찾을 수 없습니다.")
-                        
+                    sys.exit()
             else:
                 print(f"{program_to_check} 프로그램이 이미 실행 중입니다.")
                 logging.info(f"{program_to_check} 프로그램이 이미 실행 중입니다.")
+                sys.exit()
         else:
             print("팝업이 감지되지 않았습니다.")
             logging.info(f"팝업이 감지되지 않았습니다.")
-            
+            sys.exit()
     else:
         print(f"{program_to_run_path} 해당 프로그램은 대상이 아닙니다.")
-        logging.info( f"팝업이 감지되지 않았습니다.")
+        sys.exit()
