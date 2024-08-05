@@ -11,7 +11,9 @@ Execute HW inspection PGM at the end of mass production.
   - Implementing environmental settings through system control
 - Studying the logging system
   - Recorded logs allow for quick troubleshooting
-- Create an infinite loop for checking the Equipments
-  - overcome the time limits of windows scheduler through a loop system
-  - reduce the cpu usage by returning the result of false
-- 
+- Create conditional statements for checking the execution condition
+  - detected the image pop-up through pyautogui import
+  - Formed a step-by-step condition for executing a program
+- Improve the understanding of Windows scheduler's systems
+  - Learn about setting the Windows scheduler
+  - Debugging on the cause of error in windows scheduler
