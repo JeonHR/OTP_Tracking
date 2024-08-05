@@ -1,4 +1,4 @@
-# OTP_Tracking_Pop_up
+# OTP_Tracking_POP_UP
 Execute HW inspection PGM at the end of mass production.
 
 #### Purpose
